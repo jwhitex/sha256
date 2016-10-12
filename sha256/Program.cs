@@ -39,30 +39,59 @@ namespace sha256
                     Console.WriteLine("Could not find the files parent directory");
                     return;
                 }
-                
-                // Initialize a SHA256 hash object.
-                var mySha256 = SHA256.Create();
 
-                // Create a fileStream for the file.
-                using (var fileStream = file.Open(FileMode.Open))
+                if (args.Length > 0 && args[0] == "-md5")
                 {
-                    // Compute and print the hash values for each file in directory.
-                    fileStream.Position = 0;
-                    var hashValue = mySha256.ComputeHash(fileStream);
-                    var byteString = GetByteString(hashValue);
-                    var byteStringLower = byteString.ToLower().Replace(" ", "");
-                    var indexOfExtention = file.Name.LastIndexOf(".", StringComparison.Ordinal);
-                    var fileNameNoExt = file.Name.Substring(0, indexOfExtention);
+                    var md5 = MD5.Create();
 
-                    using (var fileStream2 = new FileStream(parentDirectory.FullName + $"/SHA256_{fileNameNoExt}.txt", FileMode.Create))
+
+                    using (var fileStream = file.Open(FileMode.Open))
                     {
-                        var streamWriter = new StreamWriter(fileStream2);
-                        streamWriter.WriteLine(byteString);
-                        streamWriter.WriteLine(byteStringLower);
-                        streamWriter.Flush();
-                        streamWriter.Close();
+                        // Compute and print the hash values for each file in directory.
+                        fileStream.Position = 0;
+                        var hashValue = md5.ComputeHash(fileStream);
+                        var byteString = GetByteString(hashValue);
+                        var byteStringLower = byteString.ToLower().Replace(" ", "");
+                        var indexOfExtention = file.Name.LastIndexOf(".", StringComparison.Ordinal);
+                        var fileNameNoExt = file.Name.Substring(0, indexOfExtention);
+
+                        using (var fileStream2 = new FileStream(parentDirectory.FullName + $"/SHA256_{fileNameNoExt}.txt", FileMode.Create))
+                        {
+                            var streamWriter = new StreamWriter(fileStream2);
+                            streamWriter.WriteLine(byteString);
+                            streamWriter.WriteLine(byteStringLower);
+                            streamWriter.Flush();
+                            streamWriter.Close();
+                        }
                     }
+
                 }
+                else
+                {
+                    // Initialize a SHA256 hash object.
+                    var mySha256 = SHA256.Create();
+
+                    // Create a fileStream for the file.
+                    using (var fileStream = file.Open(FileMode.Open))
+                    {
+                        // Compute and print the hash values for each file in directory.
+                        fileStream.Position = 0;
+                        var hashValue = mySha256.ComputeHash(fileStream);
+                        var byteString = GetByteString(hashValue);
+                        var byteStringLower = byteString.ToLower().Replace(" ", "");
+                        var indexOfExtention = file.Name.LastIndexOf(".", StringComparison.Ordinal);
+                        var fileNameNoExt = file.Name.Substring(0, indexOfExtention);
+
+                        using (var fileStream2 = new FileStream(parentDirectory.FullName + $"/SHA256_{fileNameNoExt}.txt", FileMode.Create))
+                        {
+                            var streamWriter = new StreamWriter(fileStream2);
+                            streamWriter.WriteLine(byteString);
+                            streamWriter.WriteLine(byteStringLower);
+                            streamWriter.Flush();
+                            streamWriter.Close();
+                        }
+                    }
+                }              
             }
             catch (DirectoryNotFoundException)
             {
