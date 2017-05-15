@@ -1,4 +1,4 @@
 # sha256
 Integrity Verifier.
 
-Before I found openssl on cygwin.
+Before I found openssl...
